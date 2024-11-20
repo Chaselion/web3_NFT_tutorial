@@ -186,6 +186,7 @@ contract NFTPoolBurnAndMint is CCIPReceiver, OwnerIsCreator {
             });
     }
 
+    
     /// @notice Fetches the details of the last received message.
     /// @return messageId The ID of the last received message.
     /// @return text The last received text.
