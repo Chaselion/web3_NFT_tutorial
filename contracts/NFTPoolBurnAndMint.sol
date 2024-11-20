@@ -94,7 +94,7 @@ contract NFTPoolBurnAndMint is CCIPReceiver, OwnerIsCreator {
     function sendMessagePayLINK(
         uint64 _destinationChainSelector,
         address _receiver,
-        bytes calldata _text
+        bytes memory _text
     )
         internal
         returns (bytes32 messageId)
