@@ -45,33 +45,38 @@ describe("source chain -> dest chain tests", async function () {
             expect(owner).to.equal(nftPoolLockAndRelease)
         }
     )
+
+    it("test if user can get a wrapped nft in dest chain ",
+        async function () {
+            const owner = await wnft.ownerOf(0)
+            expect(owner).to.equal(firstAccount)
+        }
+    )
+})
+
+describe("dest chain -> source chain tests",async function () {
+    it("test if user can burn the wnft and send ccip message on dest chain",
+        async function () {
+            await wnft.approve(nftPoolBurnAndMint.target, 0)
+            await ccipSimulator.requestLinkFromFaucet( 
+                nftPoolBurnAndMint, ethers.parseEther("10"))
+            await nftPoolBurnAndMint.burnAndSendNFT(
+                0,
+                firstAccount,
+                chainSelector,
+                nftPoolLockAndRelease.target
+            )
+            const totalSupply = await wnft.totalSupply()
+            expect(totalSupply).to.equal(0) 
+        }
+    )
+
+    it("test if user have the nft unlocked on source chain",
+        async function () {
+            const owner = await nft.ownerOf(0)
+            expect(owner).to.equal(firstAccount) 
+        }
+    )
     
 })
 
-// describe("test if the nft can be locked and transferred to destchain"
-//     , async function() {
-//         // transfer NFT from source chain to dest chain, check if the nft is locked
-//         it("transfer NFT from source chain to dest chain, check if the nft is locked",
-//             async function() {
-//                 await ccipSimulator.requestLinkFromFaucet(nftPoolLockAndRelease.target, ethers.parseEther("10"))
-
-                
-//                 // lock and send with CCIP
-//                 await nft.approve(nftPoolLockAndRelease.target, 0)
-//                 await nftPoolLockAndRelease.lockAndSendNFT(0, firstAccount, chainSelector, nftPoolBurnAndMint.target)
-                
-//                 // check if owner of nft is pool's address
-//                 const newOwner = await nft.ownerOf(0)
-//                 console.log("test")
-//                 expect(newOwner).to.equal(nftPoolLockAndRelease.target)
-//             }
-//         )
-//         // check if the wnft is owned by new owner
-//         it("check if wnft's account is owner", 
-//             async function() {
-//                 const newOwner = await wnft.ownerOf(0)
-//                 expect(newOwner).to.equal(firstAccount)
-//             }
-//         )
-//     }
-// )
